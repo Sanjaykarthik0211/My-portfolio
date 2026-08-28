@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Melody — Contrast UI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:FILL@0..1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8fbff; --surface:#ffffff; --surface2:#edf4ff; --surface3:#e1ebfa;
+  --text:#101827; --muted:#53627a; --line:#c7d6eb;
+  --primary:#0058bc; --primary2:#0070eb; --accent:#ab3500; --accent2:#ff6b35;
+  --soft:#d8e7ff; --shadow:0 10px 30px rgba(10,45,90,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh}
+button,input{font:inherit} button{border:0;cursor:pointer;color:inherit}
+.material-symbols-outlined{font-family:"Material Symbols Outlined";font-size:24px;vertical-align:middle}
+.app{min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;background:var(--surface);border-right:1px solid var(--line);padding:32px 20px;display:flex;flex-direction:column;z-index:20}
+.logo{font-size:36px;font-weight:800;letter-spacing:-1.5px;color:var(--primary);margin:0 12px 35px}
+.nav{display:grid;gap:8px}
+.nav button{display:flex;align-items:center;gap:14px;padding:13px 14px;border-radius:12px;background:transparent;text-align:left;color:var(--muted)}
+.nav button.active{background:var(--primary);color:#fff}
+.nav button:hover:not(.active){background:var(--surface2);color:var(--text)}
+.premium{margin-top:auto;background:var(--surface2);padding:18px;border-radius:16px}
+.premium strong{display:block;margin-bottom:6px}.premium p{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 12px}
+.top{position:sticky;top:0;z-index:15;height:76px;background:rgba(248,251,255,.9);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:0 34px;border-bottom:1px solid rgba(199,214,235,.7)}
+.main{margin-left:250px}
+.content{max-width:1240px;margin:auto;padding:30px 34px 110px}
+.mobile-top{display:none}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent2));display:grid;place-items:center;color:#fff;font-weight:800}
+.icon-btn{width:42px;height:42px;border-radius:50%;background:transparent;display:grid;place-items:center}
+.icon-btn:hover{background:var(--surface2)}
+.page-title{font-size:32px;margin:0 0 22px;letter-spacing:-.7px}
+.section-title{font-size:21px;margin:30px 0 15px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 4px 18px rgba(10,45,90,.04);transition:.2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.card:hover .art{box-shadow:0 0 26px 4px rgba(0,112,235,.45)}
+.recent-item:hover .mini{box-shadow:0 0 20px 3px rgba(255,107,53,.45)}
+.art,.mini{transition:box-shadow .3s ease}
+.art{aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,var(--primary),#8fc4ff 48%,var(--accent2));display:grid;place-items:center;color:#fff;font-size:42px;font-weight:800;overflow:hidden}
+.card h3{font-size:15px;margin:12px 0 4px}.card p{font-size:12px;color:var(--muted);margin:0}
+.recent{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.recent-item{display:flex;align-items:center;gap:12px;padding:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;cursor:pointer}
+.recent-item .mini{width:58px;height:58px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#ffd4c2,var(--primary));display:grid;place-items:center;color:#fff;font-weight:700}
+.searchbox{position:relative;margin-bottom:22px}.searchbox span{position:absolute;left:16px;top:15px;color:var(--muted)}
+.searchbox input{width:100%;padding:15px 18px 15px 50px;border:1px solid var(--line);border-radius:999px;background:var(--surface);outline:none}
+.searchbox input:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--soft)}
+.chips{display:flex;gap:9px;overflow:auto;padding-bottom:4px}.chip{white-space:nowrap;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px}.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.list{display:grid;gap:8px}.track{display:flex;align-items:center;gap:14px;padding:10px;border-radius:12px}.track:hover{background:var(--surface2)}.track-art{width:54px;height:54px;border-radius:9px;background:linear-gradient(135deg,var(--primary2),var(--accent2));display:grid;place-items:center;color:#fff;font-weight:700}.track-info{flex:1;min-width:0}.track-info b,.track-info span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.track-info span{font-size:12px;color:var(--muted);margin-top:4px}.track-actions{display:flex;gap:3px}.play{background:var(--primary);color:#fff;border-radius:50%;width:40px;height:40px;display:grid;place-items:center}.play:hover{background:var(--accent)}
+.playlist-head{display:flex;gap:28px;align-items:flex-end}.cover{width:270px;height:270px;border-radius:24px;background:linear-gradient(145deg,var(--primary),#b9d9ff 48%,var(--accent2));display:grid;place-items:center;color:#fff;font-size:70px;font-weight:800;box-shadow:var(--shadow)}
+.playlist-meta h1{font-size:44px;margin:6px 0}.playlist-meta p{color:var(--muted)}.actions{display:flex;gap:10px;margin:18px 0}.primary-btn{padding:11px 18px;border-radius:999px;background:var(--primary);color:#fff;font-weight:700}.secondary-btn{padding:11px 18px;border-radius:999px;background:var(--surface2);color:var(--primary);font-weight:700}
+.player-page{max-width:650px;margin:auto;text-align:center}.big-cover{width:min(520px,90vw);aspect-ratio:1;margin:20px auto 25px;border-radius:24px;background:linear-gradient(145deg,var(--primary),#b7d9ff 45%,var(--accent2));display:grid;place-items:center;color:#fff;font-size:100px;font-weight:800;box-shadow:var(--shadow)}
+.now-title{font-size:28px;margin:0 0 6px}.now-sub{color:var(--muted);margin:0 0 22px}.progress{height:5px;background:var(--surface3);border-radius:99px;position:relative;cursor:pointer}.progress i{position:absolute;left:0;top:0;height:100%;width:35%;background:var(--primary);border-radius:99px}.times{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:8px}.controls{display:flex;justify-content:center;align-items:center;gap:25px;margin-top:24px}.big-play{width:72px;height:72px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center}.big-play .material-symbols-outlined{font-size:38px}.footer-player{display:flex;justify-content:center;gap:10px;margin-top:30px}.hidden{display:none!important}
+.mobile-nav{display:none}
+
+/* ---------- Dark mode ---------- */
+body.dark{--bg:#070b14;--surface:#0f1626;--surface2:#161f35;--surface3:#1e2a45;--text:#eef2fb;--muted:#8b96b3;--line:#26314d;--soft:#1c2c4d;--shadow:0 10px 34px rgba(0,0,0,.55)}
+body.dark .top{background:rgba(7,11,20,.85)}
+body.dark .mobile-top{background:rgba(7,11,20,.9)}
+body{transition:background-color .35s ease,color .35s ease}
+.sidebar,.card,.track-art,.premium,.recent-item,.searchbox input,.chip,.top,.mobile-top,.mobile-nav{transition:background-color .35s ease,border-color .35s ease,color .35s ease}
+
+/* ---------- Sparkle / glow effects ---------- */
+#sparkleCanvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999}
+@keyframes pulseGlow{
+  0%{box-shadow:0 0 0 0 rgba(0,88,188,.55),var(--shadow)}
+  70%{box-shadow:0 0 0 22px rgba(0,88,188,0),var(--shadow)}
+  100%{box-shadow:0 0 0 0 rgba(0,88,188,0),var(--shadow)}
+}
+.big-play.playing,.play.playing{animation:pulseGlow 1.8s ease-out infinite}
+@keyframes coverGlow{
+  0%,100%{box-shadow:0 0 25px 2px rgba(0,112,235,.35),var(--shadow)}
+  50%{box-shadow:0 0 45px 12px rgba(255,107,53,.45),var(--shadow)}
+}
+.big-cover.playing,.cover.playing,.art.playing{animation:coverGlow 2.6s ease-in-out infinite}
+.bars{display:inline-flex;align-items:flex-end;gap:2px;height:14px;margin-left:6px;vertical-align:middle}
+.bars i{display:block;width:3px;background:#fff;border-radius:2px;animation:barBounce 1s ease-in-out infinite}
+.bars i:nth-child(2){animation-delay:.15s}.bars i:nth-child(3){animation-delay:.3s}
+@keyframes barBounce{0%,100%{height:4px}50%{height:14px}}
+.volume-wrap{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:18px}
+.volume-wrap input[type=range]{width:120px;accent-color:var(--primary)}
+@media(max-width:850px){
+ .sidebar{display:none}.main{margin-left:0}.top{display:none}.mobile-top{display:flex;position:sticky;top:0;z-index:15;height:68px;padding:0 18px;background:rgba(248,251,255,.92);backdrop-filter:blur(14px);align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+ .content{padding:22px 18px 105px}.page-title{font-size:27px}.grid{grid-template-columns:repeat(2,1fr)}.recent{grid-template-columns:1fr}.playlist-head{flex-direction:column;align-items:center;text-align:center}.cover{width:240px;height:240px}.playlist-meta h1{font-size:32px}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:70px;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:30;justify-content:space-around;align-items:center}.mobile-nav button{background:transparent;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px}.mobile-nav button.active{color:var(--primary);font-weight:700}.controls{gap:10px}.big-cover{font-size:75px}
+}
+@media(max-width:420px){.grid{gap:10px}.card{padding:10px}.card h3{font-size:13px}.card p{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">Melody</div>
+    <div class="nav">
+      <button data-page="home" class="active"><span class="material-symbols-outlined">home</span>Home</button>
+      <button data-page="search"><span class="material-symbols-outlined">search</span>Search</button>
+      <button data-page="library"><span class="material-symbols-outlined">library_music</span>Library</button>
+      <button data-page="premium"><span class="material-symbols-outlined">workspace_premium</span>Premium</button>
+    </div>
+    <div class="premium"><strong>Melody Premium</strong><p>Enjoy uninterrupted listening with your personalized music experience.</p><button class="primary-btn" onclick="showToast('Premium selected')">Explore</button></div>
+  </aside>
+
+  <div class="main">
+    <header class="top"><div class="avatar">M</div><div style="display:flex;gap:8px"><button class="icon-btn" onclick="showToast('Notifications')"><span class="material-symbols-outlined">notifications</span></button><button class="icon-btn" onclick="toggleTheme()"><span class="material-symbols-outlined" id="themeIcon">dark_mode</span></button></div></header>
+    <header class="mobile-top"><div class="avatar">M</div><b style="font-size:25px;color:var(--primary)">Melody</b><button class="icon-btn" onclick="showToast('Notifications')"><span class="material-symbols-outlined">notifications</span></button></header>
+
+    <main class="content">
+      <section id="home" class="page">
+        <h1 class="page-title">Good morning</h1>
+        <div class="recent">
+          <div class="recent-item" onclick="openPlayerByIndex(0)"><div class="mini">01</div><b>Daily Mix 1</b><span style="margin-left:auto;color:var(--muted)">▶</span></div>
+          <div class="recent-item" onclick="openPlayerByIndex(0)"><div class="mini">02</div><b>Deep Focus</b><span style="margin-left:auto;color:var(--muted)">▶</span></div>
+          <div class="recent-item" onclick="openPlayerByIndex(1)"><div class="mini">03</div><b>Chill Hits</b><span style="margin-left:auto;color:var(--muted)">▶</span></div>
+          <div class="recent-item" onclick="openPlayerByIndex(1)"><div class="mini">04</div><b>Discover Weekly</b><span style="margin-left:auto;color:var(--muted)">▶</span></div>
+        </div>
+        <h2 class="section-title">Made for you</h2>
+        <div class="grid">
+          <div class="card" onclick="openPlaylist()"><div class="art">DF</div><h3>Deep Focus</h3><p>Instrumental • 45 tracks</p></div>
+          <div class="card" onclick="openPlayerByIndex(1)"><div class="art">SV</div><h3>Sunset Vibes</h3><p>Chill • 32 tracks</p></div>
+          <div class="card" onclick="openPlayerByIndex(0)"><div class="art">ND</div><h3>Night Drive</h3><p>Electronic • 28 tracks</p></div>
+          <div class="card" onclick="openPlayerByIndex(1)"><div class="art">AM</div><h3>Acoustic Mornings</h3><p>Acoustic • 24 tracks</p></div>
+        </div>
+        <h2 class="section-title">Recently played</h2>
+        <div id="homeTracks" class="list"></div>
+      </section>
+
+      <section id="search" class="page hidden">
+        <h1 class="page-title">Search</h1>
+        <div class="searchbox"><span class="material-symbols-outlined">search</span><input id="searchInput" placeholder="Artists, songs, or podcasts" oninput="filterTracks()"></div>
+        <h2 class="section-title" style="margin-top:0">Browse all</h2>
+        <div class="chips"><button class="chip active">All</button><button class="chip">Music</button><button class="chip">Artists</button><button class="chip">Albums</button><button class="chip">Podcasts</button></div>
+        <div id="searchResults" class="list" style="margin-top:18px"></div>
+      </section>
+
+      <section id="library" class="page hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center"><h1 class="page-title" style="margin-bottom:14px">Your Library</h1><button class="icon-btn" onclick="showToast('Create playlist')"><span class="material-symbols-outlined">add</span></button></div>
+        <div class="chips"><button class="chip active">Playlists</button><button class="chip">Artists</button><button class="chip">Albums</button><button class="chip">Downloaded</button></div>
+        <div style="display:flex;justify-content:space-between;margin:20px 0 8px;color:var(--muted);font-size:13px"><span>↕ Recents</span><span>▦</span></div>
+        <div class="grid">
+          <div class="card" onclick="openPlaylist()"><div class="art">DF</div><h3>Deep Focus</h3><p>45 songs</p></div>
+          <div class="card" onclick="openPlaylist()"><div class="art">SV</div><h3>Sunset Vibes</h3><p>32 songs</p></div>
+          <div class="card" onclick="openPlaylist()"><div class="art">LD</div><h3>Liked Songs</h3><p>128 songs</p></div>
+          <div class="card" onclick="openPlaylist()"><div class="art">ND</div><h3>Night Drive</h3><p>28 songs</p></div>
+        </div>
+      </section>
+
+      <section id="playlist" class="page hidden">
+        <button class="secondary-btn" onclick="go('library')" style="margin-bottom:20px">← Library</button>
+        <div class="playlist-head"><div class="cover">DF</div><div class="playlist-meta"><small>PLAYLIST</small><h1>Deep Focus</h1><p>Calm electronic and instrumental music for concentration.</p><b>Melody • 45 songs</b><div class="actions"><button class="primary-btn" onclick="openPlayerByIndex(0)">▶ Play</button><button class="secondary-btn" onclick="showToast('Added to library')">＋ Add</button></div></div></div>
+        <div id="playlistTracks" class="list" style="margin-top:25px"></div>
+      </section>
+
+      <section id="player" class="page hidden">
+        <div class="player-page">
+          <button class="secondary-btn" onclick="go('home')" style="margin-bottom:8px">⌄ Back</button>
+          <div class="big-cover">NR</div>
+          <h1 id="nowTitle" class="now-title">Neethanae</h1><p id="nowSub" class="now-sub">A.R. Rahman • Mersal</p>
+          <div class="progress" onclick="seek(event)"><i id="bar"></i></div><div class="times"><span id="elapsed">1:24</span><span>-2:41</span></div>
+          <div class="controls">
+            <button class="icon-btn" id="shuffleBtn" onclick="toggleShuffle()"><span class="material-symbols-outlined">shuffle</span></button>
+            <button class="icon-btn" onclick="prevTrack()"><span class="material-symbols-outlined">skip_previous</span></button>
+            <button class="big-play" onclick="togglePlay()"><span class="material-symbols-outlined" id="playIcon">play_arrow</span></button>
+            <button class="icon-btn" onclick="nextTrack()"><span class="material-symbols-outlined">skip_next</span></button>
+            <button class="icon-btn" id="repeatBtn" onclick="toggleRepeat()"><span class="material-symbols-outlined">repeat</span></button>
+          </div>
+          <div class="volume-wrap"><span class="material-symbols-outlined">volume_up</span><input type="range" id="volumeSlider" min="0" max="100" value="80" oninput="setVolume(this.value)"></div>
+          <div class="footer-player"><button class="secondary-btn" onclick="showToast('Lyrics')">♫ Lyrics</button><button class="secondary-btn" onclick="showToast('Up next')">☷ Up Next</button></div>
+        </div>
+      </section>
+
+      <section id="premium" class="page hidden">
+        <h1 class="page-title">Premium</h1>
+        <div class="card" style="max-width:650px"><div class="art" style="aspect-ratio:16/7">MELODY+</div><h2>Upgrade your listening</h2><p style="line-height:1.7">Ad-free playback, higher quality audio, offline listening and unlimited skips.</p><button class="primary-btn" onclick="showToast('Premium upgrade selected')">Explore Premium</button></div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav">
+    <button data-page="home" class="active"><span class="material-symbols-outlined">home</span>Home</button>
+    <button data-page="search"><span class="material-symbols-outlined">search</span>Search</button>
+    <button data-page="library"><span class="material-symbols-outlined">library_music</span>Library</button>
+    <button data-page="premium"><span class="material-symbols-outlined">workspace_premium</span>Premium</button>
+  </nav>
+</div>
+
+<audio id="audioEl" preload="metadata"></audio>
+<canvas id="sparkleCanvas"></canvas>
+
+<script>
+const DEMO_SRC='https://raw.githubusercontent.com/rafaelreis-hotmart/Audio-Sample-files/master/sample.m4a';
+const tracks=[
+ ['Neethanae','A.R. Rahman • Mersal','5:03','audio/neethanae.m4a'],
+ ['Nee Singam Dhan','A.R. Rahman • Pathu Thala','3:47','audio/nee-singam-dhan.m4a'],
+ ['Midnight City','M83','4:03',DEMO_SRC],['Ocean Eyes','Billie Eilish','3:20',DEMO_SRC],['After Dark','Mr.Kitty','4:17',DEMO_SRC],['Sunset Lover','Petit Biscuit','3:58',DEMO_SRC]
+];
+let playing=false;
+let currentIndex=0;
+const audioEl=document.getElementById('audioEl');
+function renderTracks(id, arr=tracks){
+ const el=document.getElementById(id); if(!el)return;
+ el.innerHTML=arr.map((t)=>{const idx=tracks.indexOf(t);return `<div class="track" onclick="openPlayerByIndex(${idx})"><div class="track-art">${String(idx+1).padStart(2,'0')}</div><div class="track-info"><b>${t[0]}</b><span>${t[1]} • ${t[2]}</span></div><div class="track-actions"><button class="icon-btn" onclick="event.stopPropagation();showToast('Liked ${t[0]}')"><span class="material-symbols-outlined">favorite_border</span></button><button class="play" onclick="event.stopPropagation();openPlayerByIndex(${idx})"><span class="material-symbols-outlined">play_arrow</span></button></div></div>`;}).join('');
+}
+function go(page){
+ document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
+ document.getElementById(page).classList.remove('hidden');
+ document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function fmtTime(s){if(!isFinite(s))return'0:00';const m=Math.floor(s/60),r=Math.floor(s%60);return m+':'+String(r).padStart(2,'0')}
+
+function openPlayerByIndex(idx){
+ currentIndex=((idx%tracks.length)+tracks.length)%tracks.length;
+ const t=tracks[currentIndex];
+ openPlayer(t[0],t[1],true);
+}
+function openPlayer(title,sub,autoplay){
+ document.getElementById('nowTitle').textContent=title;
+ document.getElementById('nowSub').textContent=sub;
+ const t=tracks[currentIndex];
+ if(t && t[3] && audioEl.src!==t[3]){audioEl.src=t[3]}
+ go('player');
+ if(autoplay){audioEl.currentTime=0;playAudio()}
+}
+function openPlaylist(){renderTracks('playlistTracks');go('playlist')}
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+function filterTracks(){const q=document.getElementById('searchInput').value.toLowerCase();renderTracks('searchResults',tracks.filter(t=>t.join(' ').toLowerCase().includes(q)))}
+
+function playAudio(){
+ audioEl.play().then(()=>{
+  playing=true;
+  document.getElementById('playIcon').textContent='pause';
+  document.querySelectorAll('.big-play,.play').forEach(b=>b.classList.add('playing'));
+  document.querySelector('.big-cover')?.classList.add('playing');
+  showToast('Playing');
+  sparkleBurst();
+ }).catch(()=>showToast('Tap play again to start audio'));
+}
+function pauseAudio(){
+ audioEl.pause();
+ playing=false;
+ document.getElementById('playIcon').textContent='play_arrow';
+ document.querySelectorAll('.big-play,.play').forEach(b=>b.classList.remove('playing'));
+ document.querySelector('.big-cover')?.classList.remove('playing');
+ showToast('Paused');
+}
+function togglePlay(){
+ if(!audioEl.src){const t=tracks[currentIndex];audioEl.src=t[3]}
+ playing?pauseAudio():playAudio();
+}
+let shuffleOn=false, repeatOn=false;
+function toggleShuffle(){
+ shuffleOn=!shuffleOn;
+ document.getElementById('shuffleBtn').style.color=shuffleOn?'var(--primary)':'';
+ showToast(shuffleOn?'Shuffle on':'Shuffle off');
+}
+function toggleRepeat(){
+ repeatOn=!repeatOn;
+ document.getElementById('repeatBtn').style.color=repeatOn?'var(--primary)':'';
+ showToast(repeatOn?'Repeat on':'Repeat off');
+}
+function nextTrack(){
+ if(repeatOn){audioEl.currentTime=0;playAudio();return}
+ const idx=shuffleOn?Math.floor(Math.random()*tracks.length):currentIndex+1;
+ openPlayerByIndex(idx);
+}
+function prevTrack(){openPlayerByIndex(currentIndex-1)}
+audioEl.addEventListener('ended',nextTrack);
+audioEl.addEventListener('timeupdate',()=>{
+ const pct=audioEl.duration?(audioEl.currentTime/audioEl.duration*100):0;
+ document.getElementById('bar').style.width=pct+'%';
+ document.getElementById('elapsed').textContent=fmtTime(audioEl.currentTime);
+});
+function seek(e){
+ const r=e.currentTarget.getBoundingClientRect();
+ const pct=(e.clientX-r.left)/r.width;
+ document.getElementById('bar').style.width=(pct*100)+'%';
+ if(audioEl.duration)audioEl.currentTime=pct*audioEl.duration;
+}
+function setVolume(v){audioEl.volume=v/100}
+
+function toggleTheme(){
+ document.body.classList.toggle('dark');
+ const d=document.body.classList.contains('dark');
+ document.getElementById('themeIcon').textContent=d?'light_mode':'dark_mode';
+ showToast(d?'Dark mode on':'Light mode on');
+}
+
+/* ---------- Sparkle particle engine ---------- */
+const sc=document.getElementById('sparkleCanvas');
+const sctx=sc.getContext('2d');
+let sparkles=[];
+function resizeCanvas(){sc.width=innerWidth;sc.height=innerHeight}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+function addSparkle(x,y,opts={}){
+ sparkles.push({
+  x,y,
+  vx:(Math.random()-0.5)*(opts.spread||2),
+  vy:(Math.random()-0.5)*(opts.spread||2)-(opts.rise||0.5),
+  life:0,
+  maxLife:30+Math.random()*30,
+  size:1+Math.random()*(opts.size||2.5),
+  hue:opts.hue!==undefined?opts.hue:(Math.random()>0.5?205:20)
+ });
+}
+function sparkleBurst(){
+ const rect=(document.querySelector('.big-cover')||document.body).getBoundingClientRect();
+ const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+ for(let i=0;i<36;i++)addSparkle(cx,cy,{spread:9,rise:2,size:3});
+}
+document.addEventListener('mousemove',e=>{
+ if(Math.random()<0.35)addSparkle(e.clientX,e.clientY,{spread:1.2,rise:0.3,size:1.8});
+});
+(function animateSparkles(){
+ sctx.clearRect(0,0,sc.width,sc.height);
+ sparkles.forEach(p=>{
+  p.life++;p.x+=p.vx;p.y+=p.vy;p.vy+=0.01;
+  const alpha=Math.max(0,1-p.life/p.maxLife);
+  sctx.beginPath();
+  sctx.fillStyle=`hsla(${p.hue},100%,70%,${alpha})`;
+  sctx.shadowColor=`hsla(${p.hue},100%,70%,${alpha})`;
+  sctx.shadowBlur=6;
+  sctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+  sctx.fill();
+ });
+ sparkles=sparkles.filter(p=>p.life<p.maxLife);
+ requestAnimationFrame(animateSparkles);
+})();
+function showToast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#101827;color:#fff;padding:11px 16px;border-radius:999px;font-size:13px;z-index:100';document.body.appendChild(t)}t.textContent=msg;t.style.opacity=1;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.opacity=0,1400)}
+renderTracks('homeTracks',tracks.slice(0,4));renderTracks('searchResults');renderTracks('playlistTracks');
+audioEl.src=tracks[currentIndex][3];audioEl.volume=0.8;
+</script>
+</body>
+</html>
